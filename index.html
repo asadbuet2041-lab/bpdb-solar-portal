@@ -28,12 +28,12 @@
       </div>
       <div id="apiStatus" class="text-amber-400 font-medium flex items-center gap-1.5">
         <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-        API URL সেট করুন
+        API সেট করুন
       </div>
     </div>
   </div>
 
-  <!-- ১. লগইন উইন্ডো -->
+  <!-- ১. লগইন উইন্ডো (আইডি/পাসওয়ার্ড হাইড করা) -->
   <div id="loginView" class="flex items-center justify-center min-h-[calc(100vh-50px)] p-4">
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200">
       <div class="text-center mb-6">
@@ -41,13 +41,13 @@
           <i data-lucide="sun-medium" class="w-9 h-9"></i>
         </div>
         <h2 class="text-2xl font-bold text-slate-800">রুফটপ সোলার ডাটা পোর্টাল</h2>
-        <p class="text-xs text-slate-500 mt-1">জোনাল অথেনটিকেশন ও ডাটা এন্ট্রি সিস্টেম</p>
+        <p class="text-xs text-slate-500 mt-1">বাংলাদেশ বিদ্যুৎ উন্নয়ন বোর্ড (বিপিডিবি)</p>
       </div>
 
       <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">ইউজার আইডি</label>
-          <input type="text" id="loginUsername" required placeholder="যেমন: ctg_user, cum_user, admin" class="w-full px-3.5 py-2.5 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">
+          <input type="text" id="loginUsername" required placeholder="ইউজার আইডি লিখুন" class="w-full px-3.5 py-2.5 border rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500">
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">পাসওয়ার্ড</label>
@@ -55,19 +55,10 @@
         </div>
         <button type="submit" id="loginBtn" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-sm shadow transition">লগইন করুন</button>
       </form>
-
-      <div class="mt-6 p-3 bg-slate-50 border rounded-lg text-xs text-slate-600 space-y-1">
-        <p class="font-bold text-slate-700">ডিফল্ট আইডি ও পাসওয়ার্ড:</p>
-        <p>• চট্টগ্রাম: <code class="text-blue-600">ctg_user</code> / <code class="text-slate-700">ctg@password</code></p>
-        <p>• কুমিল্লা: <code class="text-blue-600">cum_user</code> / <code class="text-slate-700">cum@password</code></p>
-        <p>• সিলেট: <code class="text-blue-600">syl_user</code> / <code class="text-slate-700">syl@password</code></p>
-        <p>• ময়মনসিংহ: <code class="text-blue-600">mym_user</code> / <code class="text-slate-700">mym@password</code></p>
-        <p>• এডমিন: <code class="text-blue-600">admin</code> / <code class="text-slate-700">admin@solar#bpdb</code></p>
-      </div>
     </div>
   </div>
 
-  <!-- ২. মূল অ্যাপ্লিকেশন ড্যাশবোর্ড -->
+  <!-- ২. মূল ড্যাশবোর্ড -->
   <div id="appView" class="hidden max-w-7xl mx-auto p-4 md:p-6 space-y-6">
     <!-- টপবার -->
     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
@@ -77,47 +68,55 @@
         </div>
         <div>
           <h1 class="text-lg font-bold text-slate-800">স্থাপিত রুফটপ সোলার ডাটা এন্ট্রি ও মনিটরিং পোর্টাল</h1>
-          <p class="text-xs text-slate-500">জোন: <span id="userZoneBadge" class="font-bold text-blue-600"></span> | লগইন আইডি: <span id="userNameBadge" class="font-semibold text-slate-700"></span></p>
+          <p class="text-xs text-slate-500">জোন: <span id="userZoneBadge" class="font-bold text-blue-600"></span> | ইউজার: <span id="userNameBadge" class="font-semibold text-slate-700"></span></p>
         </div>
       </div>
       <div class="flex items-center gap-3">
         <button onclick="handleLogout()" class="px-3 py-1.5 text-xs bg-rose-50 text-rose-600 border border-rose-200 rounded-lg hover:bg-rose-100 font-semibold flex items-center gap-1.5 transition">
-          <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
-          লগআউট
+          <i data-lucide="log-out" class="w-3.5 h-3.5"></i> লগআউট
         </button>
       </div>
     </div>
 
-    <!-- মাস ও পূর্ববর্তী মাস সিলেকশন ফিল্টার -->
+    <!-- রিটার্ন নোটিশ অ্যালার্ট (যদি এডমিন ফেরত পাঠায়) -->
+    <div id="returnAlertBox" class="hidden p-4 bg-rose-50 border-l-4 border-rose-500 rounded-lg flex items-start gap-3">
+      <i data-lucide="alert-octagon" class="w-5 h-5 text-rose-600 mt-0.5"></i>
+      <div>
+        <h4 class="text-sm font-bold text-rose-800">এডমিন কর্তৃক ফাইল রিটার্ন করা হয়েছে!</h4>
+        <p class="text-xs text-rose-700 mt-0.5" id="returnReasonText"></p>
+        <span class="text-[11px] text-rose-600 mt-1 block">অনুগ্রহ করে তথ্য সংশোধন করে পুনরায় সাবমিট করুন।</span>
+      </div>
+    </div>
+
+    <!-- মাস সিলেকশন -->
     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-4">
       <div>
         <label class="block text-xs font-bold text-slate-700 mb-1">রিপোর্টিং মাস নির্বাচন করুন *</label>
         <select id="reportingMonthSelect" onchange="onReportingMonthChange()" class="w-full px-3 py-2 border rounded-lg text-sm bg-white font-medium focus:ring-2 focus:ring-blue-500 outline-none">
           <option value="">-- মাস নির্বাচন করুন --</option>
-          <option value="জানুয়ারি ২০২৬">জানুয়ারি ২০২৬</option>
-          <option value="ফেব্রুয়ারি ২০২৬">ফেব্রুয়ারি ২০২৬</option>
-          <option value="মার্চ ২০২৬">মার্চ ২০২৬</option>
-          <option value="এপ্রিল ২০২৬">এপ্রিল ২০২৬</option>
-          <option value="মে ২০২৬">মে ২০২৬</option>
-          <option value="জুন ২০২৬">জুন ২০২৬</option>
           <option value="জুলাই ২০২৬">জুলাই ২০২৬</option>
           <option value="আগস্ট ২০২৬">আগস্ট ২০২৬</option>
           <option value="সেপ্টেম্বর ২০২৬">সেপ্টেম্বর ২০২৬</option>
           <option value="অক্টোবর ২০২৬">অক্টোবর ২০২৬</option>
           <option value="নভেম্বর ২০২৬">নভেম্বর ২০২৬</option>
           <option value="ডিসেম্বর ২০২৬">ডিসেম্বর ২০২৬</option>
+          <option value="জানুয়ারি ২০২৭">জানুয়ারি ২০২৭</option>
+          <option value="ফেব্রুয়ারি ২০২৭">ফেব্রুয়ারি ২০২৭</option>
+          <option value="মার্চ ২০২৭">মার্চ ২০২৭</option>
+          <option value="এপ্রিল ২০২৭">এপ্রিল ২০২৭</option>
+          <option value="মে ২০২৭">মে ২০২৭</option>
+          <option value="জুন ২০২৭">জুন ২০২৭</option>
         </select>
       </div>
 
       <div id="firstMonthManualBox" class="p-3 bg-amber-50 border border-amber-200 rounded-lg md:col-span-2 space-y-2">
         <div class="flex items-center justify-between">
           <span class="text-xs font-bold text-amber-800 flex items-center gap-1.5">
-            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i>
-            পূর্ববর্তী মাসের তথ্য (প্রথম মাস হলে ম্যানুয়ালি এন্ট্রি দিন):
+            <i data-lucide="info" class="w-4 h-4 text-amber-600"></i>
+            পূর্ববর্তী মাসের তথ্য (প্রথম মাস হলে ম্যানুয়ালি দিন):
           </span>
           <label class="text-[11px] text-amber-900 flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" id="manualPrevCheckbox" onchange="toggleManualPrevInputs()">
-            ম্যানুয়াল ইনপুট সক্রিয় করুন
+            <input type="checkbox" id="manualPrevCheckbox" onchange="toggleManualPrevInputs()"> ম্যানুয়াল ইনপুট
           </label>
         </div>
         <div class="grid grid-cols-2 gap-3">
@@ -126,21 +125,24 @@
             <input type="number" id="prevCountInput" disabled value="0" min="0" oninput="calculateTable1()" class="w-full px-2.5 py-1.5 border rounded text-xs bg-slate-100 outline-none">
           </div>
           <div>
-            <label class="block text-[11px] text-slate-600 font-semibold mb-0.5">পূর্ববর্তী মাস পর্যন্ত মোট ক্ষমতা (MW)</label>
-            <input type="number" step="0.001" id="prevCapInput" disabled value="0" min="0" oninput="calculateTable1()" class="w-full px-2.5 py-1.5 border rounded text-xs bg-slate-100 outline-none">
+            <label class="block text-[11px] text-slate-600 font-semibold mb-0.5">পূর্ববর্তী মাস পর্যন্ত মোট ক্ষমতা (kW)</label>
+            <input type="number" step="0.01" id="prevCapInput" disabled value="0" min="0" oninput="calculateTable1()" class="w-full px-2.5 py-1.5 border rounded text-xs bg-slate-100 outline-none">
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ১ নং ছবি: সারাংশ টেবিল (Summary Table 1) -->
+    <!-- ১ নং টেবিল: সারাংশ রিপোর্ট (kW এককে ও টার্গেট ফিল্টার) -->
     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
       <div class="flex items-center justify-between mb-3">
-        <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-          <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-600"></i>
-          ১ নং টেবিল: বিতরণ অঞ্চলভিত্তিক সোলার সারাংশ রিপোর্ট
-        </h3>
-        <span class="text-xs bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-1 rounded">স্বয়ংক্রিয় গণনাকৃত</span>
+        <div>
+          <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <i data-lucide="bar-chart-2" class="w-4 h-4 text-indigo-600"></i>
+            ১ নং টেবিল: বিতরণ অঞ্চলভিত্তিক সোলার সারাংশ রিপোর্ট (লক্ষ্যমাত্রার অন্তর্ভুক্ত সোলার)
+          </h3>
+          <p class="text-[11px] text-slate-500">শুধুমাত্র "২০২৬-২৭ এর লক্ষ্যমাত্রার অন্তর্ভূক্ত: হ্যাঁ" ডাটাগুলো এখানে গণনাকৃত হচ্ছে</p>
+        </div>
+        <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded">একক: কি.ও. (kW)</span>
       </div>
 
       <div class="overflow-x-auto border border-slate-300 rounded-lg">
@@ -154,129 +156,157 @@
               <th colspan="2" class="table-cell-custom bg-emerald-50 text-emerald-900">রিপোর্টিং মাস পর্যন্ত</th>
             </tr>
             <tr class="bg-slate-100 text-slate-700 font-semibold text-[11px]">
-              <th class="table-cell-custom">স্থাপিত রুফটপ সোলারের মোট সংখ্যা</th>
-              <th class="table-cell-custom">স্থাপিত রুফটপ সোলারের মোট ক্ষমতা (MW)</th>
-              <th class="table-cell-custom bg-blue-50">স্থাপিত রুফটপ সোলারের মোট সংখ্যা</th>
-              <th class="table-cell-custom bg-blue-50">স্থাপিত রুফটপ সোলারের মোট ক্ষমতা (MW)</th>
-              <th class="table-cell-custom bg-emerald-50">স্থাপিত রুফটপ সোলারের মোট সংখ্যা</th>
-              <th class="table-cell-custom bg-emerald-50">স্থাপিত রুফটপ সোলারের মোট ক্ষমতা (MW)</th>
+              <th class="table-cell-custom">মোট সংখ্যা</th>
+              <th class="table-cell-custom">মোট ক্ষমতা (kW)</th>
+              <th class="table-cell-custom bg-blue-50">মোট সংখ্যা</th>
+              <th class="table-cell-custom bg-blue-50">মোট ক্ষমতা (kW)</th>
+              <th class="table-cell-custom bg-emerald-50">মোট সংখ্যা</th>
+              <th class="table-cell-custom bg-emerald-50">মোট ক্ষমতা (kW)</th>
             </tr>
           </thead>
           <tbody>
             <tr class="font-bold text-slate-800 text-center">
               <td class="table-cell-custom">১।</td>
               <td class="table-cell-custom text-left px-3 text-blue-700 font-bold" id="t1ZoneName">-</td>
-              <td class="table-cell-custom bg-slate-50 text-slate-700" id="t1PrevCount">0</td>
-              <td class="table-cell-custom bg-slate-50 text-slate-700" id="t1PrevCap">0.000</td>
+              <td class="table-cell-custom bg-slate-50" id="t1PrevCount">0</td>
+              <td class="table-cell-custom bg-slate-50" id="t1PrevCap">0.00</td>
               <td class="table-cell-custom bg-blue-100 text-blue-800 font-bold text-sm" id="t1CurCount">0</td>
-              <td class="table-cell-custom bg-blue-100 text-blue-800 font-bold text-sm" id="t1CurCap">0.000</td>
+              <td class="table-cell-custom bg-blue-100 text-blue-800 font-bold text-sm" id="t1CurCap">0.00</td>
               <td class="table-cell-custom bg-emerald-100 text-emerald-800 font-extrabold text-sm" id="t1TotCount">0</td>
-              <td class="table-cell-custom bg-emerald-100 text-emerald-800 font-extrabold text-sm" id="t1TotCap">0.000</td>
+              <td class="table-cell-custom bg-emerald-100 text-emerald-800 font-extrabold text-sm" id="t1TotCap">0.00</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- ২ নং ছবি: ডাটা এন্ট্রি ফরম্যাট (Table 2 Entry) -->
+    <!-- ২ নং টেবিল: বিস্তারিত ডাটা এন্ট্রি (নতুন কলামসহ) -->
     <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
         <div>
           <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
             <i data-lucide="edit-3" class="w-4 h-4 text-emerald-600"></i>
-            ২ নং টেবিল: বিস্তারিত গ্রাহক তথ্য এন্ট্রি (হলুদ সেলগুলো ড্রপডাউন)
+            ২ নং টেবিল: বিস্তারিত গ্রাহক তথ্য এন্ট্রি ফরম
           </h3>
-          <p class="text-xs text-slate-500">প্রতিটি ফিল্ড পূরণ বাধ্যতামূলক। সংখ্যাবাচক ফিল্ডে কোনো ক্যারেক্টার গ্রহণ করবে না।</p>
+          <p class="text-xs text-slate-500">হলুদ সেলগুলোতে ড্রপডাউন রয়েছে। সকল ফিল্ড পূরণ বাধ্যতামূলক।</p>
         </div>
 
-        <div class="flex items-center gap-2">
-          <button onclick="addNewEntryRow()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-            নতুন রো যোগ করুন
-          </button>
-        </div>
+        <button onclick="addNewEntryRow()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i> নতুন রো যোগ করুন
+        </button>
       </div>
 
-      <!-- বিস্তারিত টেবিল ইনপুট -->
-      <div class="overflow-x-auto border border-slate-300 rounded-lg max-h-[450px]">
+      <div class="overflow-x-auto border border-slate-300 rounded-lg max-h-[500px]">
         <table class="w-full text-xs border-collapse">
           <thead class="sticky top-0 bg-slate-100 shadow-sm z-10 text-slate-700 font-bold">
             <tr class="border-b border-slate-300">
               <th class="table-cell-custom w-10">ক্রমিক</th>
               <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[110px]">জোনের নাম ▾</th>
-              <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[140px]">সার্কেল ▾</th>
-              <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[150px]">বিবিবি/ইএসইউ ▾</th>
-              <th class="table-cell-custom min-w-[140px]">গ্রাহকের নাম *</th>
+              <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[130px]">সার্কেল ▾</th>
+              <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[140px]">বিবিবি/ইএসইউ ▾</th>
+              <th class="table-cell-custom min-w-[130px]">গ্রাহকের নাম *</th>
+              <th class="table-cell-custom min-w-[120px]">এনআইডি (NID) *</th>
+              <th class="table-cell-custom min-w-[110px]">কাস্টমার নং *</th>
               <th class="table-cell-custom min-w-[140px]">স্থাপিত সোলারের ঠিকানা *</th>
-              <th class="table-cell-custom min-w-[110px]">রুফটপ এরিয়া (বর্গফুট) *</th>
-              <th class="table-cell-custom min-w-[110px]">স্থাপিত সোলারের ক্ষমতা (মে.ও.) *</th>
-              <th class="table-cell-custom min-w-[110px]">গ্রাহকের অনুমোদিত লোড (মে.ও.) *</th>
-              <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[130px]">গ্রাহকের ধরণ ▾</th>
+              <th class="table-cell-custom min-w-[100px]">রুফটপ এরিয়া (বর্গফুট) *</th>
+              <th class="table-cell-custom min-w-[110px]">স্থাপিত সোলারের ক্ষমতা (কি.ও.) *</th>
+              <th class="table-cell-custom min-w-[100px]">অনুমোদিত লোড (কি.ও.) *</th>
+              <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[110px]">গ্রাহকের ধরণ ▾</th>
+              <th class="table-cell-custom bg-yellow-200 text-yellow-900 min-w-[130px]">২০২৬-২৭ লক্ষ্যমাত্রা ▾</th>
               <th class="table-cell-custom w-10">অ্যাকশন</th>
             </tr>
           </thead>
           <tbody id="entryTableBody" class="divide-y divide-slate-200">
-            <!-- ডাইনামিক রো ইনসার্ট হবে -->
+            <!-- ডাইনামিক রো আসবে -->
           </tbody>
         </table>
       </div>
 
-      <!-- সাবমিট বাটন -->
       <div class="mt-4 flex flex-wrap items-center justify-between gap-3 pt-3 border-t">
         <div class="text-xs text-slate-500">
-          মোট এন্ট্রি সংখ্যা: <span id="entryRowCountBadge" class="font-bold text-slate-800">0</span> টি
+          মোট এন্ট্রি: <span id="entryRowCountBadge" class="font-bold text-slate-800">0</span> টি
         </div>
         <div class="flex items-center gap-3">
           <button onclick="downloadDetailExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition">
-            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
-            এক্সেল ডাউনলোড (.xlsx)
+            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i> এক্সেল ডাউনলোড (.xlsx)
           </button>
           <button onclick="submitToGoogleSheet()" id="cloudSubmitBtn" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold flex items-center gap-2 shadow-md transition">
-            <i data-lucide="cloud-upload" class="w-4 h-4"></i>
-            গুগল ড্রাইভে সংরক্ষণ ও চূড়ান্ত সাবমিট
+            <i data-lucide="cloud-upload" class="w-4 h-4"></i> ক্লাউডে সংরক্ষণ ও চূড়ান্ত সাবমিট
           </button>
         </div>
       </div>
     </div>
 
-    <!-- এডমিন প্যানেল ভিউ (Admin Only) -->
-    <div id="adminPanelSection" class="hidden bg-white p-5 rounded-xl shadow-sm border border-slate-200 space-y-4">
-      <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-          <i data-lucide="shield" class="w-4 h-4 text-purple-600"></i>
-          এডমিন সেন্ট্রাল মনিটরিং ড্যাশবোর্ড (৪ জোনের সকল সাবমিশন হিস্টোরি)
-        </h3>
-        <button onclick="loadAdminMasterData()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-medium flex items-center gap-1">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> রিলোড ডাটা
-        </button>
+    <!-- ৪ ও ৫. এডমিন প্যানেল (স্ট্যাটাস ট্র্যাকিং, বিস্তারিত ডাটা ও রিটার্ন সুবিধা) -->
+    <div id="adminPanelSection" class="hidden space-y-6">
+      <!-- জোনভিত্তিক সাবমিশন স্ট্যাটাস -->
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between border-b pb-3 mb-4">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-purple-600"></i>
+            জোনভিত্তিক সাবমিশন স্ট্যাটাস ও রিভিউ প্যানেল
+          </h3>
+          <button onclick="loadAdminMasterData()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-medium flex items-center gap-1">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> রিলোড
+          </button>
+        </div>
+
+        <div class="overflow-x-auto border rounded-lg">
+          <table class="w-full text-xs text-left">
+            <thead class="bg-slate-100 text-slate-700 font-bold border-b">
+              <tr>
+                <th class="p-2.5">মাসের নাম</th>
+                <th class="p-2.5">জোন</th>
+                <th class="p-2.5">চলতি সংখ্যা (লক্ষ্যমাত্রা)</th>
+                <th class="p-2.5">চলতি ক্ষমতা (kW)</th>
+                <th class="p-2.5">স্ট্যাটাস</th>
+                <th class="p-2.5">সাবমিটকারী</th>
+                <th class="p-2.5 text-center">অ্যাকশন (রিটার্ন / অনুমোদন)</th>
+              </tr>
+            </thead>
+            <tbody id="adminStatusBody" class="divide-y divide-slate-100">
+              <!-- স্ট্যাটাস রো আসবে -->
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="overflow-x-auto border border-slate-200 rounded-lg">
-        <table class="w-full text-xs text-left">
-          <thead class="bg-slate-100 text-slate-700 font-bold border-b">
-            <tr>
-              <th class="p-2.5">মাসের নাম</th>
-              <th class="p-2.5">জোন</th>
-              <th class="p-2.5">পূর্ববর্তী সংখ্যা</th>
-              <th class="p-2.5">পূর্ববর্তী ক্ষমতা (MW)</th>
-              <th class="p-2.5">চলতি সংখ্যা</th>
-              <th class="p-2.5">চলতি ক্ষমতা (MW)</th>
-              <th class="p-2.5">মোট সংখ্যা</th>
-              <th class="p-2.5">মোট ক্ষমতা (MW)</th>
-              <th class="p-2.5">সাবমিটকারী</th>
-              <th class="p-2.5">তারিখ ও সময়</th>
-            </tr>
-          </thead>
-          <tbody id="adminSummaryBody" class="divide-y divide-slate-100 text-slate-600">
-            <tr><td colspan="10" class="text-center py-6 text-slate-400">ডাটা লোড হচ্ছে...</td></tr>
-          </tbody>
-        </table>
+      <!-- এডমিন কর্তৃক ২ নং টেবিলের বিস্তারিত ডাটা ভিউ -->
+      <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+            <i data-lucide="list" class="w-4 h-4 text-blue-600"></i>
+            সকল জোনের বিস্তারিত ২ নং টেবিল এন্ট্রি তালিকা
+          </h3>
+          <span class="text-xs text-slate-500" id="adminTotalDetailBadge">০ টি ডাটা</span>
+        </div>
+        <div class="overflow-x-auto border rounded-lg max-h-[400px]">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead class="sticky top-0 bg-slate-100 font-bold text-slate-700 border-b">
+              <tr>
+                <th class="p-2">মাস</th>
+                <th class="p-2">জোন</th>
+                <th class="p-2">সার্কেল</th>
+                <th class="p-2">বিবিবি/ইএসইউ</th>
+                <th class="p-2">গ্রাহক</th>
+                <th class="p-2">এনআইডি</th>
+                <th class="p-2">কাস্টমার নং</th>
+                <th class="p-2 text-right">ক্ষমতা (kW)</th>
+                <th class="p-2">ধরণ</th>
+                <th class="p-2">লক্ষ্যমাত্রা?</th>
+              </tr>
+            </thead>
+            <tbody id="adminDetailBody" class="divide-y divide-slate-100 text-slate-600">
+              <!-- ডাটা আসবে -->
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    // আপনার এক্সেল ফাইল (S&D List.xlsx) থেকে প্রক্রিয়াজাত সম্পূর্ণ ১০৪ টি S&D ডাটাবেজ
+    // ১০৪ টি S&D ডাটাবেজ
     const HIERARCHY = {
       "চট্টগ্রাম": {
         "Chatto Metro East": ["S&D KALURGHAT", "S&D Madarbari", "S&D Muradpur", "S&D Patharghata", "S&D SHOLOSHAHAR", "S&D Stadium"],
@@ -303,7 +333,7 @@
     };
 
     let currentUser = null;
-    let API_URL = localStorage.getItem("bpdb_solar_api_url") || "https://script.google.com/macros/s/AKfycbxI52yUq5FdNpCfq82vYC8qFvp3___lYCfsb6uHnzMZMoPHKJs_org12lJvbtFTYVm-/exec";
+    let API_URL = localStorage.getItem("bpdb_solar_api_url") || "";
 
     window.addEventListener("DOMContentLoaded", () => {
       lucide.createIcons();
@@ -327,7 +357,6 @@
       alert("API URL সফলভাবে সেভ হয়েছে!");
     }
 
-    // ১. লগইন ব্যবস্থা
     async function handleLogin(e) {
       e.preventDefault();
       const u = document.getElementById("loginUsername").value.trim().toLowerCase();
@@ -351,10 +380,10 @@
           currentUser.username = data.username;
           initDashboard();
         } else {
-          alert(data.message || "লগইন ব্যর্থ হয়েছে!");
+          alert(data.message || "ভুল আইডি বা পাসওয়ার্ড!");
         }
       } catch (err) {
-        alert("গুগল শিটের সাথে সংযোগ করা যায়নি! Apps Script Permission 'Anyone' আছে কিনা নিশ্চিত করুন।");
+        alert("গুগল শিটের সাথে সংযোগ করা যায়নি!");
       } finally {
         btn.disabled = false;
         btn.innerText = "লগইন করুন";
@@ -374,7 +403,6 @@
         loadAdminMasterData();
       }
 
-      // প্রাথমিক খালি রো তৈরি
       document.getElementById("entryTableBody").innerHTML = "";
       addNewEntryRow();
       lucide.createIcons();
@@ -387,7 +415,6 @@
       document.getElementById("loginForm").reset();
     }
 
-    // ২. রিপোর্টিং মাস পরিবর্তন হলে স্বয়ংক্রিয়ভাবে পূর্ববর্তী মাসের ডাটা শিট থেকে রিড
     async function onReportingMonthChange() {
       const month = document.getElementById("reportingMonthSelect").value;
       if (!month) return;
@@ -395,17 +422,27 @@
       const zone = currentUser.zone === "ALL" ? "চট্টগ্রাম" : currentUser.zone;
       
       try {
-        const res = await fetch(`${API_URL}?action=getPreviousData&zone=${encodeURIComponent(zone)}`);
+        const res = await fetch(`${API_URL}?action=getZoneStatus&zone=${encodeURIComponent(zone)}&month=${encodeURIComponent(month)}`);
         const json = await res.json();
 
-        if (json.found) {
-          document.getElementById("prevCountInput").value = json.prevCount;
-          document.getElementById("prevCapInput").value = json.prevCapacity;
-          document.getElementById("manualPrevCheckbox").checked = false;
-          toggleManualPrevInputs();
-        } else {
-          // পূর্ববর্তী ডাটা না পাওয়া গেলে প্রথম মাস হিসেবে ইনপুট এনাবল করা
-          document.getElementById("manualPrevCheckbox").checked = true;
+        if (json.success) {
+          // রিটার্ন নোটিশ চেক
+          const alertBox = document.getElementById("returnAlertBox");
+          if (json.currentStatus.status === "Returned") {
+            alertBox.classList.remove("hidden");
+            document.getElementById("returnReasonText").innerText = `কারণ: ${json.currentStatus.returnReason || "উল্লেখ নেই"}`;
+          } else {
+            alertBox.classList.add("hidden");
+          }
+
+          // পূর্ববর্তী ডাটা সেট করা
+          if (json.prevData.found) {
+            document.getElementById("prevCountInput").value = json.prevData.prevCount;
+            document.getElementById("prevCapInput").value = json.prevData.prevCap;
+            document.getElementById("manualPrevCheckbox").checked = false;
+          } else {
+            document.getElementById("manualPrevCheckbox").checked = true;
+          }
           toggleManualPrevInputs();
         }
       } catch (e) {
@@ -424,75 +461,83 @@
       capIn.className = isManual ? "w-full px-2.5 py-1.5 border rounded text-xs bg-white outline-none ring-1 ring-amber-400" : "w-full px-2.5 py-1.5 border rounded text-xs bg-slate-100 outline-none";
     }
 
-    // ৩. ডাইনামিক রো ও ক্যাস্কেডিং ড্রপডাউন (Zone > Circle > S&D)
     function addNewEntryRow() {
       const tbody = document.getElementById("entryTableBody");
       const rowIndex = tbody.children.length + 1;
       const tr = document.createElement("tr");
       tr.className = "hover:bg-slate-50 transition border-b border-slate-200 text-center";
 
-      // ইউজার জোন অনুযায়ী লক বা ড্রপডাউন
       const userZone = currentUser.zone;
       const allowedZones = userZone === "ALL" ? Object.keys(HIERARCHY) : [userZone];
 
       tr.innerHTML = `
         <td class="table-cell-custom font-semibold text-slate-500 row-idx">${rowIndex}</td>
         
-        <!-- জোন ড্রপডাউন (হলুদ) -->
         <td class="table-cell-custom bg-yellow-50">
           <select class="zone-sel w-full bg-white border border-yellow-400 rounded px-1.5 py-1 text-xs outline-none" onchange="onZoneSelect(this)">
             ${allowedZones.map(z => `<option value="${z}" ${z === userZone ? 'selected' : ''}>${z}</option>`).join('')}
           </select>
         </td>
 
-        <!-- সার্কেল ড্রপডাউন (হলুদ) -->
         <td class="table-cell-custom bg-yellow-50">
           <select class="circle-sel w-full bg-white border border-yellow-400 rounded px-1.5 py-1 text-xs outline-none" onchange="onCircleSelect(this)">
             <option value="">-- সার্কেল --</option>
           </select>
         </td>
 
-        <!-- S&D / ESU ড্রপডাউন (হলুদ) -->
         <td class="table-cell-custom bg-yellow-50">
           <select class="snd-sel w-full bg-white border border-yellow-400 rounded px-1.5 py-1 text-xs outline-none">
-            <option value="">-- বিক্রয় ও বিতরণ বিভাগ --</option>
+            <option value="">-- বিক্রয় ও বিতরণ --</option>
           </select>
         </td>
 
-        <!-- গ্রাহকের নাম (টেক্সট) -->
         <td class="table-cell-custom">
-          <input type="text" placeholder="গ্রাহকের নাম" required class="cust-name w-full border rounded px-2 py-1 text-xs outline-none focus:border-blue-500">
+          <input type="text" placeholder="গ্রাহকের নাম" required class="cust-name w-full border rounded px-2 py-1 text-xs outline-none">
         </td>
 
-        <!-- ঠিকানা (টেক্সট) -->
+        <!-- নতুন: এনআইডি ও কাস্টমার নাম্বার -->
         <td class="table-cell-custom">
-          <input type="text" placeholder="সোলারের ঠিকানা" required class="solar-addr w-full border rounded px-2 py-1 text-xs outline-none focus:border-blue-500">
+          <input type="text" placeholder="NID নাম্বার" required class="cust-nid w-full border rounded px-2 py-1 text-xs outline-none">
         </td>
 
-        <!-- রুফটপ এরিয়া (বর্গফুট) - শুধুমাত্র সংখ্যা -->
         <td class="table-cell-custom">
-          <input type="number" min="0" placeholder="বর্গফুট" required class="roof-area w-full border rounded px-2 py-1 text-xs outline-none focus:border-blue-500" onkeydown="validateNumeric(event)">
+          <input type="text" placeholder="কাস্টমার আইডি" required class="cust-no w-full border rounded px-2 py-1 text-xs outline-none">
         </td>
 
-        <!-- স্থাপিত সোলারের ক্ষমতা (মে.ও.) - শুধুমাত্র সংখ্যা -->
         <td class="table-cell-custom">
-          <input type="number" step="0.0001" min="0" placeholder="MW" required class="solar-cap w-full border border-blue-300 rounded px-2 py-1 text-xs font-bold text-blue-700 outline-none focus:border-blue-600" oninput="calculateTable1()" onkeydown="validateNumeric(event)">
+          <input type="text" placeholder="সোলারের ঠিকানা" required class="solar-addr w-full border rounded px-2 py-1 text-xs outline-none">
         </td>
 
-        <!-- অনুমোদিত লোড (মে.ও.) - শুধুমাত্র সংখ্যা -->
         <td class="table-cell-custom">
-          <input type="number" step="0.0001" min="0" placeholder="MW" required class="cust-load w-full border rounded px-2 py-1 text-xs outline-none focus:border-blue-500" onkeydown="validateNumeric(event)">
+          <input type="number" min="0" placeholder="বর্গফুট" required class="roof-area w-full border rounded px-2 py-1 text-xs outline-none" onkeydown="validateNumeric(event)">
         </td>
 
-        <!-- গ্রাহকের ধরণ (ড্রপডাউন - হলুদ) -->
+        <!-- কি.ও. ক্ষমতা -->
+        <td class="table-cell-custom">
+          <input type="number" step="0.01" min="0" placeholder="kW" required class="solar-cap w-full border border-blue-300 rounded px-2 py-1 text-xs font-bold text-blue-700 outline-none" oninput="calculateTable1()" onkeydown="validateNumeric(event)">
+        </td>
+
+        <td class="table-cell-custom">
+          <input type="number" step="0.01" min="0" placeholder="kW" required class="cust-load w-full border rounded px-2 py-1 text-xs outline-none" onkeydown="validateNumeric(event)">
+        </td>
+
+        <!-- গ্রাহকের ধরণ: সাধারণ যুক্ত হয়েছে -->
         <td class="table-cell-custom bg-yellow-50">
           <select class="cust-type w-full bg-white border border-yellow-400 rounded px-1.5 py-1 text-xs outline-none font-medium">
             <option value="সরকারি">সরকারি</option>
-            <option value="বেসরকারি" selected>বেসরকারি</option>
+            <option value="বেসরকারি">বেসরকারি</option>
+            <option value="সাধারণ" selected>সাধারণ</option>
           </select>
         </td>
 
-        <!-- অ্যাকশন -->
+        <!-- ২০২৬-২৭ লক্ষ্যমাত্রা (হ্যাঁ/না) -->
+        <td class="table-cell-custom bg-yellow-50">
+          <select class="target-sel w-full bg-white border border-yellow-400 rounded px-1.5 py-1 text-xs outline-none font-bold text-slate-800" onchange="calculateTable1()">
+            <option value="হ্যাঁ" selected>হ্যাঁ</option>
+            <option value="না">না</option>
+          </select>
+        </td>
+
         <td class="table-cell-custom">
           <button onclick="removeRow(this)" class="text-rose-500 hover:text-rose-700 p-1">
             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
@@ -503,7 +548,6 @@
       tbody.appendChild(tr);
       lucide.createIcons();
 
-      // ইনিশিয়াল জোন অনুযায়ী সার্কেল পপুলেট করা
       const zoneSel = tr.querySelector(".zone-sel");
       onZoneSelect(zoneSel);
       updateRowIndexes();
@@ -516,7 +560,7 @@
       const sndSel = tr.querySelector(".snd-sel");
 
       circleSel.innerHTML = `<option value="">-- সার্কেল --</option>`;
-      sndSel.innerHTML = `<option value="">-- বিক্রয় ও বিতরণ বিভাগ --</option>`;
+      sndSel.innerHTML = `<option value="">-- বিক্রয় ও বিতরণ --</option>`;
 
       if (HIERARCHY[zone]) {
         Object.keys(HIERARCHY[zone]).forEach(c => {
@@ -531,7 +575,7 @@
       const circle = circleElement.value;
       const sndSel = tr.querySelector(".snd-sel");
 
-      sndSel.innerHTML = `<option value="">-- বিক্রয় ও বিতরণ বিভাগ --</option>`;
+      sndSel.innerHTML = `<option value="">-- বিক্রয় ও বিতরণ --</option>`;
 
       if (HIERARCHY[zone] && HIERARCHY[zone][circle]) {
         HIERARCHY[zone][circle].forEach(s => {
@@ -559,27 +603,25 @@
       document.getElementById("entryRowCountBadge").innerText = rows.length;
     }
 
-    // নিউমেরিক ফিল্ডে অন্য কোনো অক্ষর প্রবেশ রোধ
     function validateNumeric(e) {
       if (["Backspace", "Tab", "Delete", "ArrowLeft", "ArrowRight", "."].includes(e.key)) return;
-      if (!/[0-9]/.test(e.key)) {
-        e.preventDefault();
-      }
+      if (!/[0-9]/.test(e.key)) e.preventDefault();
     }
 
-    // ৪. টেবিল ১-এর স্বয়ংক্রিয় ক্যালকুলেশন
+    // ১ নং টেবিল ক্যালকুলেশন (শুধুমাত্র লক্ষ্যমাত্রা: 'হ্যাঁ' ফিল্টার)
     function calculateTable1() {
       const prevCount = parseFloat(document.getElementById("prevCountInput").value) || 0;
       const prevCap = parseFloat(document.getElementById("prevCapInput").value) || 0;
 
-      // টেবিল ২ থেকে বর্তমান এন্ট্রিগুলোর কাউন্ট ও টোটাল মেগাওয়াট হিসাব
       let curCount = 0;
       let curCap = 0;
 
       const rows = document.querySelectorAll("#entryTableBody tr");
       rows.forEach(r => {
+        const isTargetYes = r.querySelector(".target-sel").value === "হ্যাঁ";
         const capVal = parseFloat(r.querySelector(".solar-cap").value);
-        if (!isNaN(capVal) && capVal > 0) {
+
+        if (isTargetYes && !isNaN(capVal) && capVal > 0) {
           curCount++;
           curCap += capVal;
         }
@@ -589,18 +631,17 @@
       const totalCap = prevCap + curCap;
 
       document.getElementById("t1PrevCount").innerText = prevCount;
-      document.getElementById("t1PrevCap").innerText = prevCap.toFixed(3);
+      document.getElementById("t1PrevCap").innerText = prevCap.toFixed(2);
       document.getElementById("t1CurCount").innerText = curCount;
-      document.getElementById("t1CurCap").innerText = curCap.toFixed(3);
+      document.getElementById("t1CurCap").innerText = curCap.toFixed(2);
       document.getElementById("t1TotCount").innerText = totalCount;
-      document.getElementById("t1TotCap").innerText = totalCap.toFixed(3);
+      document.getElementById("t1TotCap").innerText = totalCap.toFixed(2);
     }
 
-    // ৫. গুগল শিটে চূড়ান্ত সাবমিট
     async function submitToGoogleSheet() {
       const month = document.getElementById("reportingMonthSelect").value;
       if (!month) {
-        alert("অনুগ্রহ করে প্রথমে রিপোর্টিং মাস সিলেক্ট করুন!");
+        alert("অনুগ্রহ করে রিপোর্টিং মাস নির্বাচন করুন!");
         return;
       }
 
@@ -613,20 +654,23 @@
         const circle = r.querySelector(".circle-sel").value;
         const snd = r.querySelector(".snd-sel").value;
         const name = r.querySelector(".cust-name").value.trim();
+        const nid = r.querySelector(".cust-nid").value.trim();
+        const custNo = r.querySelector(".cust-no").value.trim();
         const addr = r.querySelector(".solar-addr").value.trim();
         const area = r.querySelector(".roof-area").value;
         const cap = r.querySelector(".solar-cap").value;
         const load = r.querySelector(".cust-load").value;
         const type = r.querySelector(".cust-type").value;
+        const target = r.querySelector(".target-sel").value;
 
-        if (!circle || !snd || !name || !addr || !area || !cap || !load) {
+        if (!circle || !snd || !name || !nid || !custNo || !addr || !area || !cap || !load) {
           alert(`রো নং ${i + 1}-এর সকল প্রয়োজনীয় সেল বাধ্যতামূলকভাবে পূরণ করুন!`);
           return;
         }
 
         entries.push({
-          zone, circle, snd, customerName: name, address: addr,
-          rooftopArea: area, capacityMW: cap, sanctionedLoad: load, customerType: type
+          zone, circle, snd, customerName: name, nid, customerNo: custNo, address: addr,
+          rooftopArea: area, capacityKW: cap, sanctionedLoad: load, customerType: type, isTarget26_27: target
         });
       }
 
@@ -654,21 +698,21 @@
         });
         const json = await res.json();
         if (json.success) {
-          alert("✓ অভিনন্দন! উভয় টেবিলের ডাটা সফলভাবে গুগল ড্রাইভে সেভ হয়েছে।");
+          alert("✓ সফলভাবে গুগল শিটে ডাটা সংরক্ষিত হয়েছে!");
+          document.getElementById("returnAlertBox").classList.add("hidden");
           if (currentUser.role === "admin") loadAdminMasterData();
         } else {
           alert("ত্রুটি: " + json.error);
         }
       } catch (err) {
-        alert("গুগল শিটে ডাটা সংরক্ষণ করা সম্ভব হয়নি। সংযোগ চেক করুন।");
+        alert("গুগল শিটে ডাটা সংরক্ষণ করা সম্ভব হয়নি।");
       } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = `<i data-lucide="cloud-upload" class="w-4 h-4"></i> গুগল ড্রাইভে সংরক্ষণ ও চূড়ান্ত সাবমিট`;
+        submitBtn.innerHTML = `<i data-lucide="cloud-upload" class="w-4 h-4"></i> ক্লাউডে সংরক্ষণ ও চূড়ান্ত সাবমিট`;
         lucide.createIcons();
       }
     }
 
-    // ৬. পারফেক্ট ইউনিকোড এক্সেল ফাইল (.xlsx) এক্সপোর্ট
     function downloadDetailExcel() {
       const month = document.getElementById("reportingMonthSelect").value || "Monthly";
       const rows = document.querySelectorAll("#entryTableBody tr");
@@ -681,11 +725,14 @@
           "সার্কেল": r.querySelector(".circle-sel").value,
           "বিবিবি/ইএসইউ": r.querySelector(".snd-sel").value,
           "গ্রাহকের নাম": r.querySelector(".cust-name").value,
+          "এনআইডি (NID)": r.querySelector(".cust-nid").value,
+          "কাস্টমার নং": r.querySelector(".cust-no").value,
           "স্থাপিত সোলারের ঠিকানা": r.querySelector(".solar-addr").value,
           "রুফটপ এরিয়া (বর্গফুট)": r.querySelector(".roof-area").value,
-          "স্থাপিত সোলারের ক্ষমতা (মে.ও.)": r.querySelector(".solar-cap").value,
-          "গ্রাহকের অনুমোদিত লোড (মে.ও.)": r.querySelector(".cust-load").value,
-          "গ্রাহকের ধরণ (সরকারি/বেসরকারি)": r.querySelector(".cust-type").value
+          "স্থাপিত সোলারের ক্ষমতা (কি.ও.)": r.querySelector(".solar-cap").value,
+          "অনুমোদিত লোড (কি.ও.)": r.querySelector(".cust-load").value,
+          "গ্রাহকের ধরণ": r.querySelector(".cust-type").value,
+          "২০২৬-২৭ লক্ষ্যমাত্রার অন্তর্ভূক্ত": r.querySelector(".target-sel").value
         });
       });
 
@@ -695,33 +742,87 @@
       XLSX.writeFile(wb, `Rooftop_Solar_${month}.xlsx`);
     }
 
-    // ৭. এডমিন ড্যাশবোর্ড ডাটা লোডার
+    // এডমিন মাস্টার ডাটা ও রিটার্ন অ্যাকশন
     async function loadAdminMasterData() {
-      const tbody = document.getElementById("adminSummaryBody");
+      const statusBody = document.getElementById("adminStatusBody");
+      const detailBody = document.getElementById("adminDetailBody");
+
       try {
         const res = await fetch(`${API_URL}?action=getAllReports`);
         const json = await res.json();
-        if (json.success && json.summaries.length > 1) {
-          const rows = json.summaries.slice(1).reverse();
-          tbody.innerHTML = rows.map(r => `
-            <tr class="hover:bg-slate-50 border-b">
-              <td class="p-2.5 font-bold text-slate-800">${r[0]}</td>
-              <td class="p-2.5 text-blue-700 font-semibold">${r[1]}</td>
-              <td class="p-2.5">${r[2]}</td>
-              <td class="p-2.5">${r[3]}</td>
-              <td class="p-2.5 font-bold text-blue-600">${r[4]}</td>
-              <td class="p-2.5 font-bold text-blue-600">${r[5]}</td>
-              <td class="p-2.5 font-bold text-emerald-600">${r[6]}</td>
-              <td class="p-2.5 font-bold text-emerald-600">${r[7]}</td>
-              <td class="p-2.5 text-slate-600 text-[11px]">${r[9]}</td>
-              <td class="p-2.5 text-slate-400 text-[10px]">${r[8]}</td>
-            </tr>
-          `).join('');
-        } else {
-          tbody.innerHTML = `<tr><td colspan="10" class="text-center py-6 text-slate-400">এখনও কোনো সাবমিশন পাওয়া যায়নি।</td></tr>`;
+
+        if (json.success) {
+          // ১. সামারি ও স্ট্যাটাস রো
+          if (json.summaries.length > 1) {
+            const rows = json.summaries.slice(1).reverse();
+            statusBody.innerHTML = rows.map(r => {
+              const status = r[10] || "Submitted";
+              const isReturned = status === "Returned";
+              return `
+                <tr class="hover:bg-slate-50 border-b">
+                  <td class="p-2.5 font-bold">${r[0]}</td>
+                  <td class="p-2.5 text-blue-700 font-semibold">${r[1]}</td>
+                  <td class="p-2.5 font-bold text-blue-600">${r[4]} টি</td>
+                  <td class="p-2.5 font-bold text-blue-600">${r[5]} kW</td>
+                  <td class="p-2.5">
+                    <span class="px-2 py-0.5 rounded text-[11px] font-bold ${isReturned ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">
+                      ${status}
+                    </span>
+                  </td>
+                  <td class="p-2.5 text-slate-500 text-[11px]">${r[9]}</td>
+                  <td class="p-2.5 text-center">
+                    ${!isReturned ? `
+                      <button onclick="adminReturnZone('${r[0]}', '${r[1]}')" class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-300 hover:bg-rose-100 rounded text-xs font-semibold">
+                        রিটার্ন করুন
+                      </button>
+                    ` : '<span class="text-rose-500 text-xs font-medium">রিটার্ন করা হয়েছে</span>'}
+                  </td>
+                </tr>
+              `;
+            }).join('');
+          }
+
+          // ২. বিস্তারিত ২ নং টেবিল ভিউ
+          if (json.details.length > 1) {
+            const dRows = json.details.slice(1).reverse();
+            document.getElementById("adminTotalDetailBadge").innerText = `${dRows.length} টি ডাটা পাওয়া গেছে`;
+            detailBody.innerHTML = dRows.map(d => `
+              <tr class="hover:bg-slate-50 border-b">
+                <td class="p-2 font-medium">${d[0]}</td>
+                <td class="p-2 text-blue-600">${d[2]}</td>
+                <td class="p-2">${d[3]}</td>
+                <td class="p-2">${d[4]}</td>
+                <td class="p-2 font-semibold text-slate-800">${d[5]}</td>
+                <td class="p-2 font-mono">${d[6]}</td>
+                <td class="p-2 font-mono">${d[7]}</td>
+                <td class="p-2 text-right font-bold text-emerald-700">${d[10]} kW</td>
+                <td class="p-2"><span class="px-1.5 py-0.5 bg-slate-100 rounded">${d[12]}</span></td>
+                <td class="p-2 font-bold ${d[13] === 'হ্যাঁ' ? 'text-emerald-600' : 'text-slate-400'}">${d[13]}</td>
+              </tr>
+            `).join('');
+          }
         }
       } catch (e) {
-        tbody.innerHTML = `<tr><td colspan="10" class="text-center py-6 text-rose-400">এডমিন ডাটা লোড করতে ব্যর্থ হয়েছে।</td></tr>`;
+        console.error(e);
+      }
+    }
+
+    async function adminReturnZone(month, zone) {
+      const reason = prompt(`[${zone}] জোনের [${month}] মাসের রিপোর্টে কী অসঙ্গতি রয়েছে? (রিটার্নের কারণ লিখুন):`);
+      if (!reason) return;
+
+      try {
+        const res = await fetch(API_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "returnReport", month, zone, reason })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert("✓ ফাইলটি সফলভাবে সংশ্লিষ্ট জোনকে রিটার্ন করা হয়েছে।");
+          loadAdminMasterData();
+        }
+      } catch (err) {
+        alert("রিটার্ন করতে সমস্যা হয়েছে!");
       }
     }
   </script>
